@@ -1,57 +1,27 @@
-import _ from 'lodash';
+import path from 'path';
+import process from 'process';
+import { readFileSync } from 'fs';
+import parse from './parse.js';
+import compareFiles from './compareFiles.js';
+import getFormat from './formatters/index.js';
 
-const buildDiffTree = (obj1, obj2) => {
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
-  const allKeys = _.uniq([...keys1, ...keys2]).sort();
-  const diffTree = allKeys.map((key) => {
-    if (!_.has(obj1, key)) {
-      return {
-        type: 'added',
-        key,
-        value: obj2[key],
-      };
-    }
-    if (!_.has(obj2, key)) {
-      return {
-        type: 'removed',
-        key,
-        value: obj1[key],
-      };
-    }
-    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-      return {
-        type: 'nested',
-        key,
-        children: buildDiffTree(obj1[key], obj2[key]),
-      };
-    }
-    if (obj1[key] !== obj2[key]) {
-      return {
-        type: 'updated',
-        key,
-        oldValue: obj1[key],
-        newValue: obj2[key],
-      };
-    }
-    return {
-      type: 'unchanged',
-      key,
-      value: obj1[key],
-    };
-  });
-  return diffTree;
+const getFullPath = (filepath) => path.resolve(process.cwd(), filepath);
+const readFile = (filepath) => readFileSync(filepath, 'utf-8');
+const getFileType = (filepath) => path.extname(filepath).slice(1);
+
+const getData = (filepath) => {
+  const fullPath = getFullPath(filepath);
+  const fileType = getFileType(fullPath);
+  const fileData = readFile(fullPath);
+  return parse(fileData, fileType);
 };
 
-export default (obj1, obj2) => {
-  if (_.isObject(obj1) && _.isObject(obj2)) {
-    return buildDiffTree(obj1, obj2);
-  }
-  if (!_.isObject(obj1)) {
-    throw new Error('first argument must be an object');
-  }
-  if (!_.isObject(obj2)) {
-    throw new Error('second argument must be an object');
-  }
-  return undefined;
+const gendiff = (filepath1, filepath2, format = 'stylish') => {
+  const obj1 = getData(filepath1);
+  const obj2 = getData(filepath2);
+  const diff = compareFiles(obj1, obj2);
+  const result = getFormat(diff, format);
+  return result;
 };
+
+export default gendiff;
