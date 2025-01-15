@@ -21,10 +21,10 @@ const compareFiles = (data1, data2) => {
     }
     if (_.isObject(value1) && _.isObject(value2)) {
       const children = compareFiles(value1, value2);
-      if(children.length > 0) {
-        return { key, children, status: 'changed' }; // Изменение статуса на 'changed'
+      if (children.length > 0) {
+          return { key, children, status: 'changed' };
       } else {
-        return { key, value: value1, status: 'unchanged' }; // Если нет изменений в children - unchanged
+          return { key, value: value1, status: 'unchanged' };
       }
     }
     if (value1 !== value2) {
