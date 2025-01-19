@@ -1,18 +1,16 @@
-import stylish from './stylish.js';
-import plain from './plain.js';
-import json from './json.js';
+import getStylish from './stylish.js';
+import getPlain from './plain.js';
+import getJson from './json.js';
 
-const getFormat = (data, format) => {
+export default (data, format) => {
   switch (format) {
     case 'stylish':
-      return stylish(data);
+      return getStylish(data);
     case 'plain':
-      return plain(data);
+      return getPlain(data);
     case 'json':
-      return json(data);
+      return getJson(data);
     default:
-      throw new Error(`Unsupported format: ${format}`);
+      throw new Error(`Неизвестный формат ${format}`);
   }
 };
-
-export default getFormat;

@@ -1,15 +1,21 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import yaml from 'js-yaml';
-import * as fs from 'node:fs';
 
-const parse = (data, fileType) => {
-  switch (fileType) {
-    case 'json':
-      return JSON.parse(data);
-    case 'yaml':
-    case 'yml':
-      return yaml.load(data);
-    default:
-      throw new Error(`Unsupported file type: ${fileType}`);
+const parsing = {
+  json: JSON.parse,
+  yaml: yaml.load,
+  yml: yaml.load,
+};
+
+const parse = (filepath, ext) => {
+  try {
+    return parsing[ext](filepath);
+  } catch (error) {
+    if (!Object.hasOwn(parsing, ext)) {
+      throw new Error(`Неизвестный формат ${ext}!`);
+    } else {
+      throw error;
+    }
   }
 };
 

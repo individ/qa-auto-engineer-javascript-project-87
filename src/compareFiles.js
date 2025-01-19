@@ -1,37 +1,35 @@
 import _ from 'lodash';
 
 const getSortedKeys = (obj1, obj2) => {
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  const keys1 = _.keys(obj1);
+  const keys2 = _.keys(obj2);
   const unionKeys = _.union(keys1, keys2);
-  return [...unionKeys].sort();
+  const sortedKeys = _.sortBy(unionKeys);
+  return sortedKeys;
 };
 
 const compareFiles = (data1, data2) => {
-  const sortedKeys = getSortedKeys(data1, data2);
-  return sortedKeys.map((key) => {
+  const keys = getSortedKeys(data1, data2);
+  const condition = keys.map((key) => {
     const value1 = data1[key];
     const value2 = data2[key];
-
     if (_.has(data1, key) && !_.has(data2, key)) {
-      return { key, value: value1, status: 'deleted' };
+      return { key, value1, status: 'deleted' };
     }
     if (!_.has(data1, key) && _.has(data2, key)) {
-      return { key, value: value2, status: 'added' };
+      return { key, value2, status: 'added' };
     }
     if (_.isObject(value1) && _.isObject(value2)) {
-      const children = compareFiles(value1, value2);
-      if (children.length > 0) {
-          return { key, children, status: 'changed' };
-      } else {
-          return { key, value: value1, status: 'unchanged' };
-      }
+      return { key, children: compareFiles(value1, value2), status: 'object' };
     }
-    if (value1 !== value2) {
-      return { key, value1, value2, status: 'changed' };
+    if (_.isEqual(value1, value2)) {
+      return { key, value1, status: 'unchanged' };
     }
-    return { key, value: value1, status: 'unchanged' };
+    return {
+      key, value1, value2, status: 'changed',
+    };
   });
+  return condition;
 };
 
 export default compareFiles;

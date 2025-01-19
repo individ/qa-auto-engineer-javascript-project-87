@@ -1,36 +1,50 @@
 import _ from 'lodash';
 
-const indent = (depth, symbol) => `${' '.repeat(2 * depth)}${symbol} `;
-const stringify = (value, depth) => {
-  if (!_.isObject(value)) {
-    return String(value);
-  }
+const getIndentation = (depth, countSpace = 4, replacer = ' ') => replacer.repeat(depth * countSpace - 2);
+const getBracketIndentation = (depth, replacer = ' ', countSpace = 4) => replacer.repeat(depth * countSpace - countSpace);
 
-  const entries = Object.entries(value);
-  const result = entries.map(([key, val]) => `${indent(depth + 2, '  ')}${key}: ${stringify(val, depth + 2)}`);
-  return `{\n${result.join('\n')}\n${indent(depth + 1, '  ')}}`;
+const stringify = (data, depth = 1) => {
+  if (!_.isPlainObject(data)) return data;
+
+  const currentIndent = getIndentation(depth);
+  const bracketIndent = getBracketIndentation(depth);
+  const currentValue = Object.entries(data);
+
+  const lines = currentValue.map(([key, value]) => `${currentIndent}  ${key}: ${stringify(value, depth + 1)}`);
+
+  const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
+  return result;
 };
 
-export default (tree) => {
-  const iter = (nodes, depth) => {
-    const result = nodes.map((node) => {
-      switch (node.type) {
-        case 'nested':
-          return `${indent(depth, '  ')}${node.key}: {\n${iter(node.children, depth + 2).join('')}\n${indent(depth + 1, '  ')}}\n`;
-        case 'unchanged':
-          return `${indent(depth, '  ')}${node.key}: ${stringify(node.value, depth)}\n`;
+const getStylish = (data) => {
+  const iter = (currentValue, depth = 1) => {
+    const currentIndent = getIndentation(depth);
+    const backetIndent = getBracketIndentation(depth);
+    const lines = currentValue.flatMap((node) => {
+      const {
+        key, value1, value2, children, status,
+      } = node;
+      switch (status) {
+        case 'deleted':
+          return `${currentIndent}- ${key}: ${stringify(value1, depth + 1)}`;
         case 'added':
-          return `${indent(depth, '+ ')}${node.key}: ${stringify(node.value, depth)}\n`;
-        case 'removed':
-          return `${indent(depth, '- ')}${node.key}: ${stringify(node.value, depth)}\n`;
-        case 'updated':
-          return `${indent(depth, '- ')}${node.key}: ${stringify(node.oldValue, depth)}\n${indent(depth, '+ ')}${node.key}: ${stringify(node.newValue, depth)}\n`;
+          return `${currentIndent}+ ${key}: ${stringify(value2, depth + 1)}`;
+        case 'unchanged':
+          return `${currentIndent}  ${key}: ${value1}`;
+        case 'object':
+          return `${currentIndent}  ${key}: ${iter(children, depth + 1)}`;
+        case 'changed':
+          return [
+            `${currentIndent}- ${key}: ${stringify(value1, depth + 1)}`,
+            `${currentIndent}+ ${key}: ${stringify(value2, depth + 1)}`,
+          ];
         default:
-          return '';
+          throw new Error(`Неизвестный статус ${status}`);
       }
     });
-    return result;
+    return ['{', ...lines, `${backetIndent}}`].join('\n');
   };
-
-  return `{\n${iter(tree, 1).join('')}}`;
+  return iter(data);
 };
+
+export default getStylish;
