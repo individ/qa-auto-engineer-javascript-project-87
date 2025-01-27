@@ -3,6 +3,7 @@ import process from 'process';
 import { readFileSync } from 'fs';
 import parse from './parse.js';
 import compareFiles from './comparefiles.js';
+import getStylish from './formatter/stylish.js';
 
 const getFilePath = (filepath) => path.resolve(process.cwd(), filepath);
 const getFileType = (filepath) => path.extname(filepath).slice(1);
@@ -21,7 +22,7 @@ const gendiff = (filepath1, filepath2) => {
   const obj1 = dataParse(data1, ext1);
   const obj2 = dataParse(data2, ext2);
   const difference = compareFiles(obj1, obj2);
-  return difference;
+  return getStylish(difference);
 };
 
 export default gendiff;
