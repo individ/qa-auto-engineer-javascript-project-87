@@ -25,3 +25,6 @@ gendiff -h
 
 ### Рекурсивное сравнение 
 [![asciicast](https://asciinema.org/a/x74CFXZYLlO7jQzeM9tWWSfDZ.svg)](https://asciinema.org/a/x74CFXZYLlO7jQzeM9tWWSfDZ)
+
+### Плоский формат (plain)
+[![asciicast](https://asciinema.org/a/wNgIJWSl1OYlVQK0RMwktyaeN.svg)](https://asciinema.org/a/wNgIJWSl1OYlVQK0RMwktyaeN)

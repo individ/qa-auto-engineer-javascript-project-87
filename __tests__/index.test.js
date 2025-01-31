@@ -18,9 +18,16 @@ const files = [
   ['filepath1.yaml', 'filepath2.yaml'],
 ];
 
-test.each(files)('gendiff', (file1, file2) => {
+test.each(files)('gendiff for stylish', (file1, file2) => {
   const filepath1 = getFilePath(file1);
   const filepath2 = getFilePath(file2);
-  const result = readFile('result.txt');
-  expect(gendiff(filepath1, filepath2)).toEqual(getString(result));
+  const result = readFile('resultStylish.txt');
+  expect(gendiff(filepath1, filepath2, 'stylish')).toEqual(getString(result));
+});
+
+test.each(files)('gendiff for plain', (file1, file2) => {
+  const filepath1 = getFilePath(file1);
+  const filepath2 = getFilePath(file2);
+  const result = readFile('resultPlain.txt');
+  expect(gendiff(filepath1, filepath2, 'plain')).toEqual(getString(result));
 });
