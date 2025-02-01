@@ -8,6 +8,7 @@ const getValue = (value) => {
 const getPlain = (data) => {
   const iter = (value, path) => {
     const result = value
+      .filter((node) => node.status !== 'unchanged')
       .flatMap((node) => {
         const {
           key, children, value1, value2, status,
@@ -20,8 +21,6 @@ const getPlain = (data) => {
             return `Property '${fullPath}' was added with value: ${getValue(value2)}`;
           case 'deleted':
             return `Property '${fullPath}' was removed`;
-          case 'unchanged':
-            return [];
           case 'changed':
             return `Property '${fullPath}' was updated. From ${getValue(value1)} to ${getValue(value2)}`;
           default:

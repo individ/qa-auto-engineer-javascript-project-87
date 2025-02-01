@@ -11,7 +11,11 @@ const parse = (filepath, ext) => {
   try {
     return parsing[ext](filepath);
   } catch (error) {
-    throw new Error(`Неизвестный формат ${ext}!`);
+    if (!Object.hasOwn(parsing, ext)) {
+      throw new Error(`Неизвестный формат ${ext}!`);
+    } else {
+      throw error;
+    }
   }
 };
 
