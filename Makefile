@@ -4,6 +4,8 @@ install:
 	npm ci
 lint:
 	npx eslint .
+setup:
+	npm install
 test:
 	npm test
 test-coverage:
