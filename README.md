@@ -1,5 +1,9 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/individ/qa-auto-engineer-javascript-project-87/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/individ/qa-auto-engineer-javascript-project-87/actions)
+[![Node CI](https://github.com/individ/qa-auto-engineer-javascript-project-87/actions/workflows/nodejs.yml/badge.svg)](https://github.com/individ/qa-auto-engineer-javascript-project-87/actions/workflows/nodejs.yml)  
+[![Maintainability](https://api.codeclimate.com/v1/badges/7401efa42a82ce18cda8/maintainability)](https://codeclimate.com/github/individ/qa-auto-engineer-javascript-project-87/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7401efa42a82ce18cda8/test_coverage)](https://codeclimate.com/github/individ/qa-auto-engineer-javascript-project-87/test_coverage) 
+
 
 # Вычислитель отличий  
 ### Описание  
@@ -28,3 +32,6 @@ gendiff -h
 
 ### Плоский формат (plain)
 [![asciicast](https://asciinema.org/a/wNgIJWSl1OYlVQK0RMwktyaeN.svg)](https://asciinema.org/a/wNgIJWSl1OYlVQK0RMwktyaeN)
+
+### Вывод в JSON
+[![asciicast](https://asciinema.org/a/kH2tqazqxFfQ9aLOh7Lzp9D6e.svg)](https://asciinema.org/a/kH2tqazqxFfQ9aLOh7Lzp9D6e)
