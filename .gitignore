@@ -1,4 +1,5 @@
 node_modules/
+coverage/
 help.cast
 step6.cast
 demo.cast
